@@ -13,5 +13,5 @@ mess=set(mess)
 print(mess)
 #Task3
 killa={'Name':'Axel','id':4712,'City':'Amsterdam'}
-print(sorted(killa))
-print(killa['Name'],killa['id'],killa['City'])
+print(killa.values())
+print(killa.keys())
