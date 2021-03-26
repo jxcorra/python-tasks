@@ -15,3 +15,16 @@ print(mess)
 killa={'Name':'Axel','id':4712,'City':'Amsterdam'}
 print(killa.values())
 print(killa.keys())
+#Task4
+import datetime
+started = datetime.datetime.now()
+numbers = range(100000000)
+result = []
+for numbers in range(0,100000000,7):
+    if  numbers%5>0:
+        result.append(numbers)
+# Тесты
+ended = datetime.datetime.now()
+assert (ended - started).seconds < 15
+assert all(item in result for item in (9000033, 9000089, 9000047,))
+assert all(item not in result for item in (10075, 10081, 10088, 9000069, 9000081,))
