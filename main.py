@@ -44,13 +44,10 @@ started = datetime.datetime.now()
 numbers = range(100000000)
 result = []
 
-# Ваш код
 i = 7
-for i in numbers:
+while (i < len(numbers)):
     if i % 5 != 0:
         result.append(i)
-  #  if i > 100000000:
-   #     break
     i += 7
 
 # Тесты
