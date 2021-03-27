@@ -36,3 +36,26 @@ print(dict_example.keys())
 print(dict_example.values())
 
 # Task 4
+
+import datetime
+
+started = datetime.datetime.now()
+
+numbers = range(100000000)
+result = []
+
+# Ваш код
+i = 7
+for i in numbers:
+    if i % 5 != 0:
+        result.append(i)
+  #  if i > 100000000:
+   #     break
+    i += 7
+
+# Тесты
+ended = datetime.datetime.now()
+print((ended - started).seconds)
+assert (ended - started).seconds < 15
+assert all(item in result for item in (9000033, 9000089, 9000047,))
+assert all(item not in result for item in (10075, 10081, 10088, 9000069, 9000081,))
