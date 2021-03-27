@@ -45,7 +45,7 @@ numbers = range(100000000)
 result = []
 
 i = 7
-while (i < len(numbers)):
+while i < len(numbers):
     if i % 5 != 0:
         result.append(i)
     i += 7
@@ -56,3 +56,120 @@ print((ended - started).seconds)
 assert (ended - started).seconds < 15
 assert all(item in result for item in (9000033, 9000089, 9000047,))
 assert all(item not in result for item in (10075, 10081, 10088, 9000069, 9000081,))
+
+# Task 5
+# Дана строка `words` из слов, разделенных либо символами новой строки, либо пробелами.
+
+# Выведите на экран строку слов, которая не содержит дубликаты слов.
+# Выходная строка должна содержать слова, соединенные пробелами.
+# Выходная строка должна храниться в переменной `result`.
+
+words = """
+jazzy
+tremble
+jealous
+blush
+tap
+wooden   greet
+thank governor
+jump
+touch
+outstanding
+jar
+undesirable
+canvas  amuse
+size
+fluffy
+lewd
+butter
+cold pipe
+cow
+earthy
+offbeat
+gigantic
+cute
+provide
+ship
+pop
+claim
+angle
+squeal
+bitter
+paste
+retire
+meaty
+spark
+love
+melted  guess
+simplistic
+creator
+shop
+untidy
+few
+moor
+dream
+periodic
+poor
+oafish
+snake
+wipe
+shirt
+wax
+best
+high
+stiff
+dust
+arch
+fast
+secretive
+correct
+fact
+hateful
+damp
+damaged
+literate scarf
+rescue
+untidy
+scent
+incompetent
+absent
+comparison
+discover attach
+thing
+middle
+chase
+harmonious
+spurious
+numberless
+jaded
+deafening
+heartbreaking
+rest
+redundant
+military    pig
+ad hoc
+brawny rebel
+mug
+apologise
+pack
+jazzy
+amused
+coast
+childlike
+"""
+
+# Ваш код
+temp = words.split()
+print(temp)
+#for i in temp:
+#    for n in temp(i+1):
+
+result2 = " "
+result = result2.join(temp)
+print(result)
+
+
+# Тесты
+assert '\n' not in result
+assert ' ' * 2 not in result
+assert len(result) == 671
