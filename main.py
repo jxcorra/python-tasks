@@ -1,3 +1,5 @@
+import datetime
+
 # Task 1
 
 parsed_data = [100, 1, 5, 20, 1, 25, 1, 55, 75, 1, 1, 1]
@@ -37,8 +39,6 @@ print(dict_example.values())
 
 # Task 4
 
-import datetime
-
 started = datetime.datetime.now()
 
 numbers = range(100000000)
@@ -58,11 +58,6 @@ assert all(item in result for item in (9000033, 9000089, 9000047,))
 assert all(item not in result for item in (10075, 10081, 10088, 9000069, 9000081,))
 
 # Task 5
-# Дана строка `words` из слов, разделенных либо символами новой строки, либо пробелами.
-
-# Выведите на экран строку слов, которая не содержит дубликаты слов.
-# Выходная строка должна содержать слова, соединенные пробелами.
-# Выходная строка должна храниться в переменной `result`.
 
 words = """
 jazzy
@@ -158,16 +153,11 @@ coast
 childlike
 """
 
-# Ваш код
-temp = words.split()
-print(temp)
-#for i in temp:
-#    for n in temp(i+1):
-
-result2 = " "
-result = result2.join(temp)
+temp_list = words.split()
+temp_list = list(dict.fromkeys(temp_list))
+result = " "
+result = result.join(temp_list)
 print(result)
-
 
 # Тесты
 assert '\n' not in result
