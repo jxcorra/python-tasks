@@ -1,3 +1,4 @@
+import datetime
 #Первое задание
 parsed_data = [100, 1, 5, 20, 1, 25, 1, 55, 75, 1, 1, 1]
 
@@ -40,3 +41,128 @@ for key, i in enumerate(dictionary):
 
 print(keys)
 print(values)
+
+# Дополнительное ДЗ
+# Первое
+started = datetime.datetime.now()
+
+numbers = range(100000000)
+result = []
+for i in numbers[7:100000000:7]:
+    if i % 5 != 0:
+        result.append(i)
+
+
+# Ваш код
+
+
+# Тесты
+ended = datetime.datetime.now()
+print((ended-started).microseconds)
+assert (ended - started).seconds < 15
+assert all(item in result for item in (9000033, 9000089, 9000047,))
+assert all(item not in result for item in (10075, 10081, 10088, 9000069, 9000081,))
+
+# Второе
+words = """
+jazzy
+tremble
+jealous
+blush
+tap
+wooden   greet
+thank governor
+jump
+touch
+outstanding
+jar
+undesirable
+canvas  amuse
+size
+fluffy
+lewd
+butter
+cold pipe
+cow
+earthy
+offbeat
+gigantic
+cute
+provide
+ship
+pop
+claim
+angle
+squeal
+bitter
+paste
+retire
+meaty
+spark
+love
+melted  guess
+simplistic
+creator
+shop
+untidy
+few
+moor
+dream
+periodic
+poor
+oafish
+snake
+wipe
+shirt
+wax
+best
+high
+stiff
+dust
+arch
+fast
+secretive
+correct
+fact
+hateful
+damp
+damaged
+literate scarf
+rescue
+untidy
+scent
+incompetent
+absent
+comparison
+discover attach
+thing
+middle
+chase
+harmonious
+spurious
+numberless
+jaded
+deafening
+heartbreaking
+rest
+redundant
+military    pig
+ad hoc
+brawny rebel
+mug
+apologise
+pack
+jazzy
+amused
+coast
+childlike
+"""
+words = set(words.split())
+result = " ".join(words)
+print(result)
+# Ваш код
+
+# Тесты
+assert '\n' not in result
+assert ' ' * 2 not in result
+assert len(result) == 671
