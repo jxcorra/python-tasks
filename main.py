@@ -165,6 +165,7 @@ assert len(result) == 671
 numbers = range(10000, 100000)
 result = []
 
+# как-то очень в лоб получилось...
 for i in range(10000, 100000, 2):
     if i % 20000 <= 8888:
         if i % 2000 <= 888:
@@ -202,3 +203,33 @@ print('Data contains:', letters, 'letters and', digits, 'digits.')
 # Тесты
 assert digits == 40 and letters == 160
 assert upper_letters == 81 and lower_letters == 79
+
+# Task 8
+
+data = 'FUcd6ewHBYy1adyBk5i8ucoNQu0ZU2aJ4UtKvAk6mhUAxnYoGVSBap8zIxgLVSX2Dh5uhG5E1F0Q0ABO6ueUH2HRNx7i114emHe5wn6pRPmcipjMaJavAkKJHPHOw7OPByEoD16aDEgWJpt24uvdDbdSSk8PlqPX8i5qBnM6uAb1guhSvdnyp2SLL77IKRX48WI2PQ7e'
+result = ''
+
+# вспомнил в универе лабы по плюсам, где мы в условиях for'ов гоняли коды char'ов латинского
+# алфавита, вот и решил как-то похожим образом сделать тут, чтобы не вбивать мануально
+# строку типа alphabet='123456790ABCDEFG...xyz' и запускать цикл, который проходится
+# по каждому символу из этого "алфавита" и считает его
+
+# не отрицаю, что это было бы проще данного решения, но тем не менее
+for i in range(48, 58):
+    if data.count(chr(i)) != 0:
+        result = result + chr(i) + str(data.count(chr(i)))
+for i in range(65, 91):
+    if data.count(chr(i)) != 0:
+        result = result + chr(i) + str(data.count(chr(i)))
+for i in range(97, 123):
+    if data.count(chr(i)) != 0:
+        result = result + chr(i) + str(data.count(chr(i)))
+
+print(result)
+
+# разве цифры не должны тут идти по порядку?
+# да и буквы по порядку почти все поменялись местами... не знаю баг или фича,
+# но я сделал так чтобы по алфавитному порядку считало
+
+# Тесты
+assert result == '1603265544756685A5B6E3D4G2F2I3H6K3J4M2L3O3N2Q3P6S6R3U5W2V2Y2X3Z1a6c3b2e5d5g3i4h4k4j1m3l1o3n4q2p5u7t2w3v4y4x3z1'
