@@ -4,7 +4,7 @@ parsed_data = [100, 1, 5, 20, 1, 25, 1, 55, 75, 1, 1, 1]
 while 1 in parsed_data:
     parsed_data.remove(1)
 print(sorted(parsed_data))
-parsed_data = sorted((parsed_data))
+parsed_data = sorted(parsed_data)
 assert parsed_data.count(1) == 0
 assert len(parsed_data) == 6
 assert parsed_data == [5, 20, 25, 55, 75, 100]
