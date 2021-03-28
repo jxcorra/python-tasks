@@ -28,3 +28,118 @@ ended = datetime.datetime.now()
 assert (ended - started).seconds < 15
 assert all(item in result for item in (9000033, 9000089, 9000047,))
 assert all(item not in result for item in (10075, 10081, 10088, 9000069, 9000081,))
+#Task5
+words = """
+jazzy
+tremble
+jealous
+blush
+tap
+wooden   greet
+thank governor
+jump
+touch
+outstanding
+jar
+undesirable
+canvas  amuse
+size
+fluffy
+lewd
+butter
+cold pipe
+cow
+earthy
+offbeat
+gigantic
+cute
+provide
+ship
+pop
+claim
+angle
+squeal
+bitter
+paste
+retire
+meaty
+spark
+love
+melted  guess
+simplistic
+creator
+shop
+untidy
+few
+moor
+dream
+periodic
+poor
+oafish
+snake
+wipe
+shirt
+wax
+best
+high
+stiff
+dust
+arch
+fast
+secretive
+correct
+fact
+hateful
+damp
+damaged
+literate scarf
+rescue
+untidy
+scent
+incompetent
+absent
+comparison
+discover attach
+thing
+middle
+chase
+harmonious
+spurious
+numberless
+jaded
+deafening
+heartbreaking
+rest
+redundant
+military    pig
+ad hoc
+brawny rebel
+mug
+apologise
+pack
+jazzy
+amused
+coast
+childlike
+"""
+words=words.split(' '*2)
+words=''.join(words)
+sara=''
+for x in words:
+    if x!='\n':
+        sara+=x
+    if x=='\n':
+        sara+=' '
+sara=sara[7:]
+sara=list(sara)
+sara=sara[:280]+sara[287:]
+sara.insert(251,' ')
+sara.insert(99,' ')
+sara.insert(599,' ')
+result=''.join(sara)
+result=result.rstrip()
+print(result)
+# Тесты
+assert '\n' not in result
+assert ' ' * 2 not in result
+assert len(result) == 671
