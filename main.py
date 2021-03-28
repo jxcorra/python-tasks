@@ -44,11 +44,9 @@ started = datetime.datetime.now()
 numbers = range(100000000)
 result = []
 
-i = 7
-while i < len(numbers):
+for i in range(7, 100000000, 7):
     if i % 5 != 0:
         result.append(i)
-    i += 7
 
 # Тесты
 ended = datetime.datetime.now()
@@ -153,10 +151,8 @@ coast
 childlike
 """
 
-temp_list = words.split()
-temp_list = list(dict.fromkeys(temp_list))
-result = " "
-result = result.join(temp_list)
+separator = list(dict.fromkeys(words.split()))
+result = " ".join(separator)
 print(result)
 
 # Тесты
