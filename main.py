@@ -179,3 +179,26 @@ def is_all_even(number: int) -> bool:
 
 assert all(is_all_even(number) for number in result)
 
+# Task 7
+
+data = 'FUcd6ewHBYy1adyBk5i8ucoNQu0ZU2aJ4UtKvAk6mhUAxnYoGVSBap8zIxgLVSX2Dh5uhG5E1F0Q0ABO6ueUH2HRNx7i114emHe5wn6pRPmcipjMaJavAkKJHPHOw7OPByEoD16aDEgWJpt24uvdDbdSSk8PlqPX8i5qBnM6uAb1guhSvdnyp2SLL77IKRX48WI2PQ7e'
+digits = 0
+letters = 0
+upper_letters = 0
+lower_letters = 0
+
+for i in data:
+    if i.isdigit():
+        digits += 1
+    if i.isalpha():
+        letters += 1
+    if i.islower():
+        lower_letters += 1
+    if i.isupper():
+        upper_letters += 1
+
+print('Data contains:', letters, 'letters and', digits, 'digits.')
+
+# Тесты
+assert digits == 40 and letters == 160
+assert upper_letters == 81 and lower_letters == 79
