@@ -1,12 +1,12 @@
 import datetime
-#Первое задание
+# Первое задание
 parsed_data = [100, 1, 5, 20, 1, 25, 1, 55, 75, 1, 1, 1]
 
 while 1 in parsed_data:
     parsed_data.remove(1)
 
-parsed_data.append(100)
 parsed_data.remove(100)
+parsed_data.insert(5, 100)
 
 # Ниже набор тестов, менять нельзя   
 assert parsed_data.count(1) == 0
@@ -48,9 +48,12 @@ started = datetime.datetime.now()
 
 numbers = range(100000000)
 result = []
+passer = 35
 for i in numbers[7:100000000:7]:
-    if i % 5 != 0:
-        result.append(i)
+    if i == passer:
+        continue
+    result.append(i)
+    passer += 35
 
 
 # Ваш код
@@ -166,3 +169,56 @@ print(result)
 assert '\n' not in result
 assert ' ' * 2 not in result
 assert len(result) == 671
+
+
+# Третье
+numbers = range(10000, 100000)
+result = []
+
+for i in numbers:
+    if (i // 10000) % 2 == 0:
+        if (i // 1000) % 2 == 0:
+            if (i // 100) % 2 == 0:
+                if (i // 10) % 2 == 0:
+                    if i % 2 == 0:
+                        result.append(i)
+
+# Тесты
+def is_all_even(number: int) -> bool:
+    digits = [int(digit) for digit in str(number)]
+    return all(digit % 2 == 0 for digit in digits)
+
+assert all(is_all_even(number) for number in result)
+
+# Четвертое
+data = 'FUcd6ewHBYy1adyBk5i8ucoNQu0ZU2aJ4UtKvAk6mhUAxnYoGVSBap8zIxgLVSX2Dh5uhG5E1F0Q0ABO6ueUH2HRNx7i114emHe5wn6pRPmcipjMaJavAkKJHPHOw7OPByEoD16aDEgWJpt24uvdDbdSSk8PlqPX8i5qBnM6uAb1guhSvdnyp2SLL77IKRX48WI2PQ7e'
+
+digits = 0
+letters = 0
+upper_letters = 0
+lower_letters = 0
+
+symbols = list(data)
+for i in symbols:
+    if i.isdigit():
+        digits += 1
+    elif i.isupper():
+        upper_letters += 1
+letters = len(symbols) - digits
+lower_letters = letters - upper_letters
+
+# Тесты
+assert digits == 40 and letters == 160
+assert upper_letters == 81 and lower_letters == 79
+
+# Пятое
+data = 'FUcd6ewHBYy1adyBk5i8ucoNQu0ZU2aJ4UtKvAk6mhUAxnYoGVSBap8zIxgLVSX2Dh5uhG5E1F0Q0ABO6ueUH2HRNx7i114emHe5wn6pRPmcipjMaJavAkKJHPHOw7OPByEoD16aDEgWJpt24uvdDbdSSk8PlqPX8i5qBnM6uAb1guhSvdnyp2SLL77IKRX48WI2PQ7e'
+result = ''
+
+for i in data:
+    if i not in result:
+        counter = data.count(i)
+        result = result + i + str(counter)
+
+# Тесты
+assert result == '1603265544756685A5B6E3D4G2F2I3H6K3J4M2L3O3N2Q3P6S6R3U5W2V2Y2X3Z1a6c3b2e5d5g3i4h4k4j1m3l1o3n4q2p5u7t2w3v4y4x3z1'
