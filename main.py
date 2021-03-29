@@ -169,3 +169,22 @@ def is_all_even(number: int) -> bool:
     return all(digit % 2 == 0 for digit in digits)
 
 assert all(is_all_even(number) for number in result)
+#Task 7
+data = 'FUcd6ewHBYy1adyBk5i8ucoNQu0ZU2aJ4UtKvAk6mhUAxnYoGVSBap8zIxgLVSX2Dh5uhG5E1F0Q0ABO6ueUH2HRNx7i114emHe5wn6pRPmcipjMaJavAkKJHPHOw7OPByEoD16aDEgWJpt24uvdDbdSSk8PlqPX8i5qBnM6uAb1guhSvdnyp2SLL77IKRX48WI2PQ7e'
+digits = 0
+letters = 0
+upper_letters = 0
+lower_letters = 0
+import string
+for x in data:
+    if x in string.ascii_uppercase:
+        upper_letters+=1
+    elif x in string.ascii_lowercase:
+        lower_letters+=1
+    else:
+        digits+=1
+letters=lower_letters+upper_letters
+print(upper_letters, lower_letters, digits, letters)
+# Тесты
+assert digits == 40 and letters == 160
+assert upper_letters == 81 and lower_letters == 79
