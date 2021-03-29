@@ -143,3 +143,29 @@ print(result)
 assert '\n' not in result
 assert ' ' * 2 not in result
 assert len(result) == 671
+#Task6
+numbers = range(10000, 100000)
+result = []
+sum = 0
+for x in numbers:
+    if x % 2 == 0:
+        a = x
+        kor = []
+        while x > 0:
+            kor.append(x % 10)
+            x //= 10
+        kor.reverse()
+        for j in kor:
+            if j % 2 == 0:
+                sum += 1
+    if sum == 5:
+        result.append(a)
+    sum = 0
+print(result)
+
+# Тесты
+def is_all_even(number: int) -> bool:
+    digits = [int(digit) for digit in str(number)]
+    return all(digit % 2 == 0 for digit in digits)
+
+assert all(is_all_even(number) for number in result)
