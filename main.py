@@ -207,6 +207,9 @@ for i in symbols:
 letters = len(symbols) - digits
 lower_letters = letters - upper_letters
 
+print('Data contains:', letters, 'letters and', digits, 'digits.')
+
+
 # Тесты
 assert digits == 40 and letters == 160
 assert upper_letters == 81 and lower_letters == 79
