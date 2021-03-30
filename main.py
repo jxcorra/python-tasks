@@ -188,3 +188,33 @@ print(upper_letters, lower_letters, digits, letters)
 # Тесты
 assert digits == 40 and letters == 160
 assert upper_letters == 81 and lower_letters == 79
+#Task8
+data = 'FUcd6ewHBYy1adyBk5i8ucoNQu0ZU2aJ4UtKvAk6mhUAxnYoGVSBap8zIxgLVSX2Dh5uhG5E1F0Q0ABO6ueUH2HRNx7i114emHe5wn6pRPmcipjMaJavAkKJHPHOw7OPByEoD16aDEgWJpt24uvdDbdSSk8PlqPX8i5qBnM6uAb1guhSvdnyp2SLL77IKRX48WI2PQ7e'
+result = ''
+j=[]
+import string
+letters={}
+letter=string.ascii_letters
+for x in letter:
+    letters[x] = 0
+digits={}
+digit=range(10)
+for t in digit:
+    digits[t]=0
+for x in data:
+    if x in string.ascii_letters:
+        letters[x]+=1
+    elif x in range(10):
+        digits[x]+=1
+for x in string.ascii_letters:
+    j.append(x)
+    j.append(str(letters.get(x)))
+for x in range(10):
+    j.append(str(x))
+    j.append(str(digits.get(x)))
+result=''.join(j)
+print(result)
+# Ваше решение
+
+# Тесты
+assert result == '1603265544756685A5B6E3D4G2F2I3H6K3J4M2L3O3N2Q3P6S6R3U5W2V2Y2X3Z1a6c3b2e5d5g3i4h4k4j1m3l1o3n4q2p5u7t2w3v4y4x3z1'
