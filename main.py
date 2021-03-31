@@ -198,23 +198,24 @@ letter=string.ascii_letters
 for x in letter:
     letters[x] = 0
 digits={}
-digit=range(10)
+digit='0123456789'
 for t in digit:
     digits[t]=0
 for x in data:
     if x in string.ascii_letters:
         letters[x]+=1
-    elif x in range(10):
+    elif x in digit:
         digits[x]+=1
-for x in string.ascii_letters:
-    j.append(x)
-    j.append(str(letters.get(x)))
-for x in range(10):
-    j.append(str(x))
-    j.append(str(digits.get(x)))
+for x in digits:
+    if digits[x]>0:
+        j.append(str(x))
+        j.append(str(digits.get(x)))
+for x in letters:
+    if letters[x]>0:
+        j.append(x)
+        j.append(str(letters.get(x)))
 result=''.join(j)
 print(result)
-# Ваше решение
 
 # Тесты
 assert result == '1603265544756685A5B6E3D4G2F2I3H6K3J4M2L3O3N2Q3P6S6R3U5W2V2Y2X3Z1a6c3b2e5d5g3i4h4k4j1m3l1o3n4q2p5u7t2w3v4y4x3z1'
