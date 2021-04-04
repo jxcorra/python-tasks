@@ -1,20 +1,8 @@
-def print_hello(name):
-    assert isinstance(name, str)
-
-    print('Hello ' + name)
+import conditions
 
 
-def is_even(number):
-    assert isinstance(number, int)
+if __name__ == '__main__':
+    input_data = range(20)
 
-    return number % 2 == 0
-
-
-def is_all_less_than(sequence, bound):
-    assert all(isinstance(item, int) for item in sequence)
-
-    return all(item < bound for item in sequence)
-
-
-def is_less_than(item, bound):
-    return item < bound
+    if all(conditions.is_less_than(item, 20) for item in input_data):
+        print('All items are less than 20')
