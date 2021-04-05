@@ -9,9 +9,8 @@ parsed_data = [100, 1, 5, 20, 1, 25, 1, 55, 75, 1, 1, 1]
 while 1 in parsed_data:
     parsed_data.remove(1)
 
-    parsed_data.sort()
-
-    print(parsed_data)
+parsed_data.sort()
+print(parsed_data)
 
     # Ниже набор тестов, менять нельзя
 assert parsed_data.count(1) == 0
@@ -57,6 +56,6 @@ user = {
 print(user.keys())
 
 # Вторая строка
-print(user['first_name'], user['id'], user['city'])
-# OR
 print(user.values())
+
+
