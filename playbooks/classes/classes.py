@@ -10,10 +10,14 @@ print_divider('как объявлять классы, аттрибуты объ
 
 class Car:  # имя класса
     # параметризованный инициализатор объекта класса `Car`
-    def __init__(self, wheels: int, doors: int) -> None:
+    def __init__(self, wheels: int, doors: int, passangers=None) -> None:
         self.wheels = wheels  # аттрибут объекта класса
         self.doors = doors  # аттрибут объекта класса
         self.speed = 0  # аттрибут класса со значением по умолчанию
+        self.passangers = passangers or []
+
+    def add_passanger(self, name):
+        self.passangers.append(name)
 
     def get_num_of_wheels(self) -> int:  # метод объекта класса `get`
         return self.wheels
@@ -28,9 +32,23 @@ class Car:  # имя класса
         self.speed += speed_increase
 
 
-unknown_car = Car(4, 4)  # объект класса `Car`
+
+passangers = ['alex', 'john']
+
+
+unknown_car = Car(4,4)
+unknown_car.add_passanger('nick')
+unknown_car.add_passanger('alex')
+
+assert len(unknown_car.passangers) == 2
+
+unknown_car2 = Car(4, 2)
+
+assert len(unknown_car2.passangers) == 0
+
 print_object(unknown_car)
 print(f'Increase speed by 60 km/h')
+unknown_car.speed_up(60)
 print_object(unknown_car)
 
 print_divider('`__dict__` - словарь аттрибутов и методов объекта, словарь аттрибутов и методов класса')
@@ -217,7 +235,7 @@ print(f'The car body type for 4 doors is {Car.get_body_type(4)}')
 print(f'The car body type for 2 doors is {Car.get_body_type(2)}')
 
 sedan = Car(4, 4)
-print(f'The car body type for 4 doors instance is {Car.get_body_type(4)}')
+print(f'The car body type for 4 doors instance is {sedan.get_body_type(2)}')
 
 
 class Car:
@@ -304,7 +322,7 @@ print_object(sedan)
 try:
     sedan.speed -= 15
 except ValueError:
-    print(f'Sedan speed cannot be lezz than zero')
+    print(f'Sedan speed cannot be less than zero')
 
 
 print_divider('инкапсуляция')
@@ -428,34 +446,34 @@ class MovableCreature:
 
 class EatingCreature:
     def eat(self):
-        print('Creature of type {type(self).__name__} is eating')
+        print(f'Creature of type {type(self).__name__} is eating')
 
 
 class CookingCreature:
     def cook(self):
-        print('Creature of type {type(self).__name__} is cooking')
+        print(f'Creature of type {type(self).__name__} is cooking')
 
 
 class Cat(TalkingCreature, MovableCreature, EatingCreature):
     def voice(self):
-        print('Meow')
+        print(f'Meow')
 
 
 class Dog(TalkingCreature, MovableCreature, EatingCreature):
     def voice(self):
-        print('Woo')
+        print(f'Woo')
 
     def eat(self):
         super().eat()
-        print('Dogs eat a lot')
+        print(f'Dogs eat a lot')
 
 
 class Human(TalkingCreature, MovableCreature, EatingCreature, CookingCreature):
     def voice(self):
-        print('Hello')
+        print(f'Hello')
 
     def move(self):
-        print('Human moves like a Jagger')
+        print(f'Human moves like a Jagger')
 
 
 creatures = [Cat(), Dog(), Human()]
@@ -466,10 +484,10 @@ for creature in creatures:
     try:
         creature.cook()
     except AttributeError:
-        print('Creature of type {type(creature).__name__} cannot cook')
+        print(f'Creature of type {type(creature).__name__} cannot cook')
 
 
-print_divider('mro')
+print_divider('mro')  # method resolution order
 
 
 class UIComponent:
@@ -525,8 +543,8 @@ class AttributeManager:
 
         return self.__dict__[item]
 
-
     def __setattr__(self, key, value):
+        print(f'DEBUG: Set value {value} for {key}')
         if key != '_AttributeManager__allowed_attributes' and key not in self.__allowed_attributes:
             raise AttributeError(f'No {key} attribute')
 
@@ -563,6 +581,7 @@ class ValidatableCollection:
 
 
     def __setitem__(self, key, value):
+        print(f'DEBUG: Set value {value} for key {key}')
         if not self.__condition(value):
             raise ValueError(f'{value} is not suitable')
 
@@ -580,6 +599,74 @@ except ValueError:
     print('Not suitable value')
 
 
+class OwnContext:
+    def __init__(self):
+        print('Context initialize')
+
+    def __enter__(self):
+        print('Context enter')
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print('Context exit')
+
+
+class CountingCallable:
+    def __init__(self):
+        self.count = 0
+
+    def __call__(self, *args, **kwargs):
+        self.count += 1
+
+    def __del__(self):
+        print('GC deinitialized')
+
+    def get_count(self):
+        return self.count
+
+
+callable_obj = CountingCallable()
+callable_obj()
+callable_obj()
+callable_obj()
+print(callable_obj.get_count())
+
+
+def handle(arg, arg2):
+    if isinstance(arg, str):
+        pass
+    elif isinstance(arg, int):
+        pass
+    elif isinstance(arg, list):
+        pass
+
+
+class Handler:
+    def handle(self):
+        pass
+
+
+class StrHandler(Handler):
+    def handle(self):
+        print('Str')
+
+
+class IntHandler(Handler):
+    def handle(self):
+        print('Int')
+
+
+handlers = {
+    str: StrHandler,
+    int: IntHandler
+}
+
+arg = 123
+
+
+
+handlers[type(arg)]().handle()
+
+
 class Factory:
     def __init__(self):
         pass
@@ -593,3 +680,14 @@ class Worker:
 class Car:
     def __init__(self):
         pass
+
+
+# пример проверки только допустимых команд для ввода с клавиатуры
+allowed_cmds = ['show', 'load']
+
+import sys
+cmd = sys.argv[1]
+if cmd not in allowed_cmds:
+    raise RuntimeError('Not allowed command')
+
+print(sys.argv)
