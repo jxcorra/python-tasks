@@ -1,5 +1,9 @@
 # пример класса Pizza с использованием `staticmethod` и `classmethod`
-from typing import List, NoReturn, Optional
+import pprint
+import types
+from cmath import sqrt
+from functools import wraps
+from typing import List, NoReturn, Optional, Tuple, Dict
 from playbooks.utils import print_divider, setup_object_printer_with_globals
 
 
@@ -93,3 +97,152 @@ try:
     object_printer(pepperoni)
 except ValueError:
     print('Not enough ingredients for pepperoni')
+
+
+print_divider('Метаклассы')
+# вернемся к примеру с обработчиками запросов. типов запросов много, обработчиков запросов также много.
+# метаклассы помогают нам на лету собирать registry всех типов обработчиков на все типы запросов.
+
+
+# каждый раз добавляя новый handler я хочу чтобы в словарь `registry` добавлялась новая пара ключ-значение,
+# где ключ - тип `request`, значение - класс `request_handler`
+request_handler_registry: Dict[str, 'RequestHandler'] = {}
+
+
+# просто удобная обертка для `request`
+class Request:
+    def __init__(self):
+        pass
+
+
+# удобный класс для описания всех поддерживаемых типов `request`
+class RequestType:
+    http = 'http'
+    tcp = 'tcp'
+    telegram = 'telegram'
+
+
+# метакласс, который при создании нового класса, добавляет в `registry` новую пару ключ-значение и проверяет,
+# что для такого типа `request` не было раньше зарегестрировано обработчика
+class RequestHandlerType(type):
+    # метод `__new__` отвечает как раз таки за создание объектов, а, так как класс является объектом,
+    # то метакласс занимается созданием классов
+    # входной набор параметров:
+    # - имя класса
+    # - кортеж родительских (супер) классов
+    # - словарь аттрибутов и методов
+    def __new__(mcs, class_name: str, bases: Tuple, attributes: Dict):
+        # каждый класс обработчика запроса будет иметь аттрибут `for_type`, в котором будет указан тип запросов,
+        # которые обработчик умеет обрабатывать
+        handler_for_type = attributes.get('for_type')
+
+        # проверяем, что для такого типа запросов еще не зарегестрирован обработчик
+        if handler_for_type in request_handler_registry:
+            raise ValueError(f'Handler for type {handler_for_type} already registered')
+
+        # type - создает класс из переданных параметров
+        klass = type(class_name, bases, attributes)
+        # регистрируем обработчик (добавляем его в словарь)
+        request_handler_registry[handler_for_type] = klass
+
+        return klass
+
+
+# базовый (абстрактный) обработчик запросов, созданием класса занимается `RequestHandlerType`
+class RequestHandler(metaclass=RequestHandlerType):
+    for_type = None
+
+    def handle(self, request: Request) -> Request:
+        return request
+
+
+# обработчик http запросов, наследуется от `RequestHandler`, созданием класса занимается `RequestHandlerType`
+class HTTPRequestHandler(RequestHandler, metaclass=RequestHandlerType):
+    for_type = RequestType.http
+
+    def handle(self, request: Request) -> Request:
+        return request
+
+
+# обработчик tcp запросов, наследуется от `RequestHandler`, созданием класса занимается `RequestHandlerType`
+class TCPRequestHandler(RequestHandler, metaclass=RequestHandlerType):
+    for_type = RequestType.tcp
+
+    def handle(self, request: Request) -> Request:
+        return request
+
+
+# обработчик telegram запросов, наследуется от `RequestHandler`, созданием класса занимается `RequestHandlerType`
+class TelegramRequestHandler(RequestHandler, metaclass=RequestHandlerType):
+    for_type = RequestType.telegram
+
+    def handle(self, request: Request) -> Request:
+        return request
+
+
+# смотрим содержимое registry
+pprint.pprint(request_handler_registry)
+
+
+# добавляем функцию, которая, в зависимости от типа запроса, возвращает подходящий обработчик
+def get_request_handler_for_type(for_type: str) -> Optional[RequestHandler]:
+    return request_handler_registry[for_type]
+
+
+# берем обработчик http запросов
+http_request_handler = get_request_handler_for_type(RequestType.http)
+object_printer(http_request_handler)
+# создаем объект обработчика
+handler = http_request_handler()
+object_printer(handler)
+# делаем обработку запроса
+handler.handle(Request())
+
+
+print_divider('Пример метакласса, который всем методам класса добавляет аттрибут `call_count` '
+              'и подсчитывает кол-во вызовов этих методов')
+
+
+class WithMethodCallCount(type):
+    def __new__(mcs, class_name: str, bases: Tuple, attributes: Dict):
+        # декоратор, который методу добавляет новый аттрибут `call_count`
+        def with_call_count(func):
+            @wraps(func)
+            def param_wrapper(*args, **kwargs):
+                param_wrapper.call_count += 1
+                return func(*args, **kwargs)
+
+            param_wrapper.call_count = 0
+
+            return param_wrapper
+
+        # функция для определения является ли `value` вызываемым значением
+        def is_method(value):
+            return (callable(value) or isinstance(value, types.MethodType) or
+                    isinstance(value, staticmethod) or isinstance(value, classmethod))
+
+        # оборачиваем все методы декоратором для добавления аттрибута `call_count`
+        for attr_name, attr_value in attributes.items():
+            if is_method(attr_value):
+                attributes[attr_name] = with_call_count(attr_value)
+
+        return type(class_name, bases, attributes)
+
+
+class Math(metaclass=WithMethodCallCount):
+    def sqrt(self, value):
+        return sqrt(value)
+
+    def power(self, value, power):
+        return value ** power
+
+
+math = Math()
+math.sqrt(5)
+math.sqrt(5)
+math.sqrt(5)
+math.sqrt(5)
+math.sqrt(5)
+# возвращаем кол-во вызовов метода `sqrt`
+print(f'Call count `math.sqrt`: {math.sqrt.call_count}')
+assert math.sqrt.call_count == 5
