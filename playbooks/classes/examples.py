@@ -1,4 +1,5 @@
 # пример класса Pizza с использованием `staticmethod` и `classmethod`
+import dataclasses
 import pprint
 import types
 from cmath import sqrt
@@ -246,3 +247,95 @@ math.sqrt(5)
 # возвращаем кол-во вызовов метода `sqrt`
 print(f'Call count `math.sqrt`: {math.sqrt.call_count}')
 assert math.sqrt.call_count == 5
+
+
+print_divider('Классы данных (dataclasses)')
+
+
+# класс-обертка для ингредиентов пиццы
+@dataclasses.dataclass(frozen=True)
+class PizzaIngredient:
+    name: str
+
+
+# создаем объекты наших ингредиентов, из которых может состоять пицца
+Souse = PizzaIngredient('souse')
+object_printer(Souse)
+Cheese = PizzaIngredient('cheese')
+object_printer(Cheese)
+Tomato = PizzaIngredient('tomato')
+object_printer(Tomato)
+Pepperoni = PizzaIngredient('pepperoni')
+object_printer(Pepperoni)
+
+
+@dataclasses.dataclass
+class Pizza:
+    # python поддерживает вложенные в класс классы
+    # (python inner classes https://www.datacamp.com/community/tutorials/inner-classes-python)
+    # в данном конкретном случае класс `Type` просто нужен для того чтобы указать все возможные типы пицц
+    @dataclasses.dataclass(frozen=True)
+    class Type:
+        margherita: str = 'margherita'
+        pepperoni: str = 'pepperoni'
+
+    type: str
+    # способ в `dataclass` указать использование пустого списка, как значение по умолчанию, при такой записи
+    # каждый раз будет создаваться копия списка
+    ingredients: List[PizzaIngredient] = dataclasses.field(default_factory=[])
+
+    # метод, который просто проверяет, что для приготовления рецепта достаточно ингредиентов
+    # если не хватает, то возбуждается исключение
+    @staticmethod
+    def validate_recipe(recipe: List[PizzaIngredient], ingredients: List[PizzaIngredient]) -> Optional[NoReturn]:
+        if not all(needed in ingredients for needed in recipe):
+            raise ValueError('Not enough ingredients for pizza')
+
+    # классовый метод для получения пиццы маргариты
+    @classmethod
+    def margherita(cls, ingredients: List[PizzaIngredient]):
+        recipe = [Souse, Cheese, Tomato]  # рецепт маргариты (просто список необходимых ингредиентов)
+
+        # проверяем, что переданных параметром ингредиентов достаточно для приготовления рецепта
+        cls.validate_recipe(recipe, ingredients)
+
+        return cls(ingredients=ingredients, type=cls.Type.margherita)
+
+    # классовый метод для получения пиццы пепперони
+    @classmethod
+    def pepperoni(cls, ingredients: List[PizzaIngredient]):
+        recipe = [Souse, Cheese, Tomato, Pepperoni]  # рецепт пепперони (просто список необходимых ингредиентов)
+
+        # проверяем, что переданных параметром ингредиентов достаточно для приготовления рецепта
+        cls.validate_recipe(recipe, ingredients)
+
+        return cls(ingredients=ingredients, type=cls.Type.pepperoni)
+
+
+# класс пиццайоло, класс, который как раз таки и готовит пиццу, так как пицца не может готовить сама себя
+@dataclasses.dataclass
+class Pizzaiolo:
+    ingredients: List[PizzaIngredient] = dataclasses.field(default_factory=[])
+
+    # просим пиццайоло сделать нам маргариту
+    def make_margherita(self):
+        return Pizza.margherita(ingredients=self.ingredients)
+
+    # просим пиццайоло сделать нам пепперони
+    def make_pepperoni(self):
+        return Pizza.pepperoni(ingredients=self.ingredients)
+
+
+# создаем нового пиццайоло и даем ему набор ингредиентов
+pizzaiolo = Pizzaiolo(ingredients=[Souse, Tomato, Cheese])
+object_printer(pizzaiolo)
+# просим сделать маргариту
+margerita = pizzaiolo.make_margherita()
+object_printer(margerita)
+
+# просим сделать пепперони, но ингредиентов не хватает и мы получаем исключение
+try:
+    pepperoni = pizzaiolo.make_pepperoni()
+    object_printer(pepperoni)
+except ValueError:
+    print('Not enough ingredients for pepperoni')
