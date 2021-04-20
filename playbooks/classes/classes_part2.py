@@ -132,6 +132,7 @@ class RequestHandlerType(type):
     # - имя класса
     # - кортеж родительских (супер) классов
     # - словарь аттрибутов и методов
+    # def __new__(mcs, *args, **kwargs):
     def __new__(mcs, class_name: str, bases: Tuple, attributes: Dict):
         # каждый класс обработчика запроса будет иметь аттрибут `for_type`, в котором будет указан тип запросов,
         # которые обработчик умеет обрабатывать
@@ -238,12 +239,19 @@ class Math(metaclass=WithMethodCallCount):
         return value ** power
 
 
-math = Math()
+class StrictMath(Math):
+    def sqrt_int(self, value):
+        return sqrt(value)
+
+
+math = StrictMath()
+math.sqrt_int(3)
 math.sqrt(5)
 math.sqrt(5)
 math.sqrt(5)
 math.sqrt(5)
 math.sqrt(5)
+# print(f'Call count `math.sqrt_int`: {math.sqrt_int.call_count}')
 # возвращаем кол-во вызовов метода `sqrt`
 print(f'Call count `math.sqrt`: {math.sqrt.call_count}')
 assert math.sqrt.call_count == 5
@@ -339,3 +347,100 @@ try:
     object_printer(pepperoni)
 except ValueError:
     print('Not enough ingredients for pepperoni')
+
+
+# 1 регистрация новых питомцев - метакласс
+# 2 класс питомца
+# 3 я хочу возвращать питомца по имени питомца
+
+# ключ - строчный тип питомца,
+# значение - класс питомца Pet, Cat, Dog
+pet_types = {}
+
+
+class PetMeta(type):
+    def __new__(mcs, class_name, superclasses, attributes):
+        print(attributes)
+        pet_type = attributes.get('type')
+        pet_class = type(class_name, superclasses, attributes)
+        pet_types[pet_type] = pet_class
+
+        return pet_class
+
+
+class CatMeta(PetMeta):
+    def __new__(cls, *args, **kwargs):
+        super().__new__()
+
+
+class Pet(metaclass=PetMeta):
+    type = None
+
+    def __init__(self, name='', diet='', color=''):
+        self.name = name
+        self.diet = diet
+        self.color = color
+
+
+class Cat(Pet):
+    type = 'cat'
+
+
+class Dog(Pet):
+    type = 'dog'
+
+
+pet_types = {
+    'cat': Cat,
+    'dog': Dog
+}
+
+
+def get_pet(type, name, color, diet):
+    pet_class = pet_types[type]  # Pet
+    return pet_class(name, color, diet)
+
+
+kuzya = get_pet('cat', 'Alex', 'black', 'fish')  # object Pet
+
+
+@dataclasses.dataclass
+class Character:
+    name: str
+    location: str
+    gender: str
+    species: str
+    status: str = 'Alive'
+    passangers: List[str] = dataclasses.field(default_factory=[])
+
+
+class Car:
+    wheels = 0
+
+    def __init__(self, wheels, passangers = []):
+        self.wheels = wheels
+        self.passangers = passangers
+
+
+car = Car(4)
+car.wheels = 4
+Car.wheels = 16
+print(Car.wheels, car.wheels)
+
+
+class Car(object):
+    def __init__(self, color=''):
+        self.color = color
+
+    @classmethod
+    def f1(cls):
+        pass
+
+    @classmethod
+    def f1_(cls):
+        pass
+
+
+# https://pypi.org/project/overload-function/
+car = Car('red')
+print(car.color)
