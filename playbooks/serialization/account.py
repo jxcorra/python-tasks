@@ -1,12 +1,17 @@
 import typing
 import decimal
 
+import requests
 
 ACCOUNTS_DB_PATH = 'accounts.txt'
 
 
 class Account:
     def __init__(self, name: str, age: int, balance: decimal.Decimal):
+        assert isinstance(name, str) and name
+        assert isinstance(age, int) and age > 0
+        assert isinstance(balance, decimal.Decimal)
+
         self.name = name
         self.age = age
         self.balance = balance
@@ -37,6 +42,19 @@ def load_accounts(from_file: typing.IO) -> typing.Union[Accounts, typing.NoRetur
         accounts.append(account)
 
     return accounts
+
+
+def get_accounts_from_api(api_url: str) -> str:
+    return requests.get(api_url).text
+
+
+def load_accounts_from_api(api_url: str) -> typing.Union[Accounts, typing.NoReturn]:
+    import io
+
+    accounts_serialized = get_accounts_from_api(api_url)
+    accounts_io = io.StringIO(accounts_serialized)
+
+    return load_accounts(accounts_io)
 
 
 if __name__ == '__main__':
