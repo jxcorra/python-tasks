@@ -77,7 +77,7 @@ class AccountTestCase(unittest.TestCase):
         result = serialize(test_account)
 
         # Assert
-        assert result == expected_serialized_account
+        self.assertEqual(expected_serialized_account, result)
 
     def test_deserialize_account(self):
         # Arrange
